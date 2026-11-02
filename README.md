@@ -1,7 +1,13 @@
-# Projeto-desktop
 # Sistema Desktop de Gestão e Caixa
-**Aluno:** Abner da Silva Gomes  
-**Matrícula:** 251018184  
-**Disciplina:** Orientação a Objetos - Módulo 01  
 
-Repositório dedicado à modelagem de requisitos e arquitetura UML do projeto Desktop para controle de estoque e caixa de pequenos comércios.
+## 👥 Integrantes do Grupo
+* **Abner da Silva Gomes** — Matrícula: `251018184`
+* **Vinicius Coelho de Souza** — Matrícula: `251016377`
+
+---
+
+## 📌 Sobre o Projeto
+**Disciplina:** Orientação a Objetos (OO) — Módulo 01  
+**Aplicação:** Sistema Desktop para controle de estoque, frente de caixa (PDV) e emissão de recibos para pequenos comércios.
+
+Repositório dedicado à documentação de requisitos, modelo de casos de uso e arquitetura inicial da aplicação.
