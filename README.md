@@ -1,8 +1,7 @@
 # Sistema Desktop de Gestão e Caixa
 
-## 👥 Integrantes do Grupo
+## Nome:
 * **Abner da Silva Gomes** — Matrícula: `251018184`
-* **Vinicius Coelho de Souza** — Matrícula: `251016377`
 
 ---
 
