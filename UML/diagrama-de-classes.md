@@ -102,8 +102,9 @@ VendaFrame ..> VendasBD : dependência
 - **Composição:** `GestaoCaixaApp` instancia as telas e mantém suas referências no dicionário `frames`.
 - **Associação:** cada tela recebe e guarda a referência `controller`, que aponta para a instância de `GestaoCaixaApp`.
 - **Dependência:** as telas administrativa e de venda utilizam os repositórios de estoque e vendas por meio do controller.
-- **Polimorfismo:** `mostrar_frame()` trabalha com diferentes telas por meio da interface comum herdada de `tk.Frame`, chamando `tkraise()` sem precisar conhecer a implementação específica de cada tela. Esse é o uso polimórfico identificado na implementação atual.
 
-## Observação importante sobre a implementação atual
+## Limite importante da modelagem
 
-O estado da venda (`carrinho` e `total_venda`) fica em `GestaoCaixaApp`, e `VendaFrame` executa as operações de inclusão, cálculo e fechamento. Não existe uma classe de domínio `Venda` no código original. O diagrama registra essa estrutura como ela está; portanto, ele documenta a implementação atual, não uma refatoração proposta.
+O código atual demonstra claramente herança, composição/gerenciamento das telas, associação com o controller e dependência dos repositórios. A chamada de `tkraise()` em telas diferentes, por si só, não é uma demonstração forte de polimorfismo definido pela aplicação: é um método herdado do Tkinter. Por isso, não classifico esse ponto como polimorfismo comprovado no modelo.
+
+O estado da venda (`carrinho` e `total_venda`) fica em `GestaoCaixaApp`, e `VendaFrame` executa as operações de inclusão, cálculo e fechamento. Não existe uma classe de domínio `Venda` no código original. O diagrama documenta a implementação atual, não uma refatoração proposta.
