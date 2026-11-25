@@ -45,9 +45,12 @@ class GestaoCaixaApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Sistema Gestão de Caixa - PDV")
-        self.geometry("1366x768")
-        self.minsize(1000, 650)
+        self.geometry("1920x1080")
         self.configure(bg=BG_SISTEMA)
+        try:
+            self.state("zoomed")
+        except tk.TclError:
+            pass
 
         self.estoque_db = EstoqueBD()
         self.vendas_db = VendasBD(self.estoque_db.nome_banco)
