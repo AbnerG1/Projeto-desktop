@@ -1,7 +1,5 @@
 # Diagrama de classes — Gestão de Caixa
 
-Este diagrama representa as classes encontradas nos arquivos originais `gestao_de_caixa.py` e `sistema_bd.py`. Não foram adicionadas classes de domínio que não existem no código.
-
 ```mermaid
 classDiagram
 direction TB
