@@ -63,12 +63,29 @@ class VendasBD {
 BancoDeDados <|-- EstoqueBD : herança
 BancoDeDados <|-- VendasBD : herança
 
+class TkRoot <<Tkinter>>
+class TkFrame <<Tkinter>>
 class GestaoCaixaApp {
   +usuario: Usuario
   +venda_atual: Venda
+  +estoque_db: EstoqueBD
+  +vendas_db: VendasBD
   +iniciar_venda()
   +mostrar_frame(classe)
+  +sair()
 }
+class LoginFrame {
+  +acesso_admin()
+  +acesso_funcionario()
+}
+class AdminFrame {
+  +criar()
+  +listar()
+  +atualizar()
+  +deletar()
+  +relatorio()
+}
+class FuncionarioFrame
 class VendaFrame {
   +preparar_nova_venda()
   +atualizar_visor()
@@ -76,7 +93,19 @@ class VendaFrame {
   +fechar_venda()
   +cancelar_venda()
 }
+GestaoCaixaApp --|> TkRoot : herança Tkinter
+LoginFrame --|> TkFrame : herança Tkinter
+AdminFrame --|> TkFrame : herança Tkinter
+FuncionarioFrame --|> TkFrame : herança Tkinter
+VendaFrame --|> TkFrame : herança Tkinter
+GestaoCaixaApp *-- LoginFrame : composição
+GestaoCaixaApp *-- AdminFrame : composição
+GestaoCaixaApp *-- FuncionarioFrame : composição
+GestaoCaixaApp *-- VendaFrame : composição
 GestaoCaixaApp o-- EstoqueBD : mantém
 GestaoCaixaApp o-- VendasBD : mantém
 GestaoCaixaApp --> Usuario : perfil atual
+GestaoCaixaApp --> Venda : venda em andamento
+AdminFrame ..> EstoqueBD : dependência
+AdminFrame ..> VendasBD : dependência
 VendaFrame ..> Venda : dependência
