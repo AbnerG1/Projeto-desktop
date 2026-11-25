@@ -44,7 +44,7 @@ Os testes usam bancos temporários, portanto não alteram o banco utilizado pela
 
 ## Organização orientada a objetos
 
-A venda agora é representada por um objeto `Venda`, composto por objetos `ItemVenda), que se associam a `Produto`. A interface `VendaFrame` solicita operações ao modelo e apresenta os resultados; não mantém o carrinho nem calcula ou altera o total diretamente.
+A venda agora é representada por um objeto `Venda`, composto por objetos `ItemVenda`, que se associam a `Produto`. A interface `VendaFrame` solicita operações ao modelo e apresenta os resultados; não mantém o carrinho nem calcula ou altera o total diretamente.
 
 Os perfis `Funcionario` e `Gerente` herdam de `Usuario` e implementam as permissões de forma polimórfica. `EstoqueBD` e `VendasBD` compartilham a infraestrutura da classe `BancoDeDados`.
 
