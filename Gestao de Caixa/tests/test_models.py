@@ -36,6 +36,27 @@ class TestModeloVenda(unittest.TestCase):
         self.assertTrue(gerente.pode_gerenciar_estoque())
         self.assertTrue(gerente.pode_cancelar_venda())
 
+    def test_venda_vazia_nao_pode_ser_finalizada(self):
+        class RepositorioFalso:
+            def registrar_venda(self, venda):
+                raise AssertionError("O repositório não deveria ser chamado.")
+
+        with self.assertRaises(ValueError):
+            self.venda.finalizar(RepositorioFalso())
+
+    def test_venda_fechada_nao_pode_ser_alterada_ou_finalizada_novamente(self):
+        class RepositorioFalso:
+            def registrar_venda(self, venda):
+                return 42
+
+        self.venda.adicionar_produto(self.produto, 1)
+        self.venda.finalizar(RepositorioFalso())
+
+        with self.assertRaises(ValueError):
+            self.venda.adicionar_produto(self.produto, 1)
+        with self.assertRaises(ValueError):
+            self.venda.finalizar(RepositorioFalso())
+
     def test_cancelamento_exige_gerente(self):
         with self.assertRaises(PermissionError):
             self.venda.cancelar(Funcionario())
