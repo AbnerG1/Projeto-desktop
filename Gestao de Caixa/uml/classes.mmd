@@ -1,0 +1,82 @@
+classDiagram
+direction TB
+
+class Usuario {
+  +perfil: str
+  +pode_gerenciar_estoque() bool
+  +pode_cancelar_venda() bool
+}
+class Funcionario {
+  +pode_gerenciar_estoque() bool
+  +pode_cancelar_venda() bool
+}
+class Gerente {
+  +pode_gerenciar_estoque() bool
+  +pode_cancelar_venda() bool
+}
+Usuario <|-- Funcionario : herança
+Usuario <|-- Gerente : herança
+
+note for Usuario "Polimorfismo: a aplicação chama os mesmos métodos de permissão; cada perfil responde de forma diferente."
+
+class Produto {
+  +id: int
+  +nome: str
+  +preco: float
+  +quantidade: int
+}
+class ItemVenda {
+  +produto: Produto
+  +quantidade: int
+  +subtotal: float
+}
+class Venda {
+  +id: int
+  +status: str
+  +itens: tuple
+  +total: float
+  +adicionar_produto(produto, quantidade)
+  +finalizar(repositorio_vendas)
+  +cancelar(usuario)
+}
+Venda "1" *-- "0..*" ItemVenda : composição
+ItemVenda "0..*" --> "1" Produto : associação
+Venda ..> VendasBD : dependência
+
+class BancoDeDados {
+  +nome_banco: str
+  +conectar()
+  +inicializar_banco()
+}
+class EstoqueBD {
+  +cadastrar(nome, preco, qtd)
+  +listar_produtos()
+  +buscar_produto(id)
+  +atualizar(id, preco, qtd)
+  +deletar(id)
+}
+class VendasBD {
+  +registrar_venda(venda)
+  +relatorio_dia(data)
+  +resumo_dia(data)
+}
+BancoDeDados <|-- EstoqueBD : herança
+BancoDeDados <|-- VendasBD : herança
+
+class GestaoCaixaApp {
+  +usuario: Usuario
+  +venda_atual: Venda
+  +iniciar_venda()
+  +mostrar_frame(classe)
+}
+class VendaFrame {
+  +preparar_nova_venda()
+  +atualizar_visor()
+  +add_produto()
+  +fechar_venda()
+  +cancelar_venda()
+}
+GestaoCaixaApp o-- EstoqueBD : mantém
+GestaoCaixaApp o-- VendasBD : mantém
+GestaoCaixaApp --> Usuario : perfil atual
+VendaFrame ..> Venda : dependência
