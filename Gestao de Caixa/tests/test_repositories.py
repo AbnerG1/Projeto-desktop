@@ -22,7 +22,8 @@ class TestRepositoriosSQLite(unittest.TestCase):
 
     def test_migracao_de_banco_antigo_preserva_registros(self):
         # Reproduz o esquema anterior, sem as colunas introduzidas pela refatoração.
-        with sqlite3.connect(self.db_path) as con:
+        banco_legado = Path(self.temp.name) / "legado.db"
+        with sqlite3.connect(banco_legado) as con:
             con.execute(
                 "CREATE TABLE produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, preco REAL, quantidade INTEGER)"
             )
@@ -38,12 +39,12 @@ class TestRepositoriosSQLite(unittest.TestCase):
             )
             con.execute("INSERT INTO vendas (total) VALUES (?)", (25.0,))
 
-        estoque = EstoqueBD(self.db_path)
+        estoque = EstoqueBD(banco_legado)
         produto = estoque.buscar_produto(1)
         self.assertEqual(produto.nome, "Produto legado")
         self.assertEqual(produto.quantidade, 7)
 
-        with sqlite3.connect(self.db_path) as con:
+        with sqlite3.connect(banco_legado) as con:
             colunas_vendas = {row[1] for row in con.execute("PRAGMA table_info(vendas)")}
             colunas_itens = {row[1] for row in con.execute("PRAGMA table_info(itens_venda)")}
             self.assertIn("data_hora", colunas_vendas)
