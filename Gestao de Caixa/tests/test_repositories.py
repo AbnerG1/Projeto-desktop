@@ -19,6 +19,47 @@ class TestRepositoriosSQLite(unittest.TestCase):
         id_produto = self.estoque.cadastrar(nome, preco, quantidade)
         return self.estoque.buscar_produto(id_produto)
 
+    def test_migracao_de_banco_antigo_preserva_registros(self):
+        # Reproduz o esquema anterior, sem as colunas introduzidas pela refatoração.
+        with sqlite3.connect(self.db_path) as con:
+            con.execute(
+                "CREATE TABLE produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, preco REAL, quantidade INTEGER)"
+            )
+            con.execute(
+                "CREATE TABLE vendas (id INTEGER PRIMARY KEY AUTOINCREMENT, total REAL)"
+            )
+            con.execute(
+                "CREATE TABLE itens_venda (id INTEGER PRIMARY KEY AUTOINCREMENT, venda_id INTEGER, produto_nome TEXT, quantidade INTEGER, subtotal REAL)"
+            )
+            con.execute(
+                "INSERT INTO produtos (nome, preco, quantidade) VALUES (?, ?, ?)",
+                ("Produto legado", 12.5, 7),
+            )
+            con.execute("INSERT INTO vendas (total) VALUES (?)", (25.0,))
+
+        estoque = EstoqueBD(self.db_path)
+        produto = estoque.buscar_produto(1)
+        self.assertEqual(produto.nome, "Produto legado")
+        self.assertEqual(produto.quantidade, 7)
+
+        with sqlite3.connect(self.db_path) as con:
+            colunas_vendas = {row[1] for row in con.execute("PRAGMA table_info(vendas)")}
+            colunas_itens = {row[1] for row in con.execute("PRAGMA table_info(itens_venda)")}
+            self.assertIn("data_hora", colunas_vendas)
+            self.assertIn("produto_id", colunas_itens)
+            self.assertEqual(con.execute("SELECT total FROM vendas WHERE id = 1").fetchone()[0], 25.0)
+
+    def test_nao_registra_venda_de_produto_excluido_antes_do_fechamento(self):
+        produto = self.criar_produto()
+        venda = Venda()
+        venda.adicionar_produto(produto, 1)
+        self.estoque.deletar(produto.id)
+
+        with self.assertRaises(ValueError):
+            venda.finalizar(self.vendas)
+
+        self.assertEqual(self.vendas.resumo_dia()["quantidade_vendas"], 0)
+
     def test_crud_de_produto(self):
         produto = self.criar_produto()
         self.assertEqual(produto.nome, "Mouse")
